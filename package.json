@@ -1,0 +1,22 @@
+{
+  "name": "brandshield-server",
+  "version": "1.0.0",
+  "description": "BrandShield backend: PayFast checkout, user accounts, daily leak scanning, and email reports.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "scan-now": "node scanner.js --run-once"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^2.7.0",
+    "nodemailer": "^6.9.14"
+  }
+}

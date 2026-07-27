@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — BrandShield</title>
+<meta name="description" content="Get in touch with the BrandShield team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="logo">
+      <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M50 6 L88 20 V48 C88 72 72 88 50 96 C28 88 12 72 12 48 V20 Z" fill="#1F1830" stroke="#F5586B" stroke-width="4"/>
+        <circle cx="50" cy="48" r="20" fill="none" stroke="#2FD8B8" stroke-width="3"/>
+        <path d="M50 28 A20 20 0 0 1 70 48 L50 48 Z" fill="#2FD8B8" opacity="0.6"/>
+      </svg>
+      <span>Brand<em>Shield</em></span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">MENU</button>
+    <nav class="nav-links">
+      <a href="index.html#how-it-works">How It Works</a>
+      <a href="index.html#features">Features</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="login.html">Login</a>
+    </nav>
+    <a href="register.html" class="nav-cta">Get Protected</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">Contact</span>
+    <h1>Talk to us.</h1>
+    <p class="lede">Questions about a plan, a case, or partnering with us — send a message and we'll get back to you.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="max-width:560px;">
+    <form id="contact-form">
+      <div class="field">
+        <label for="c-name">Full name</label>
+        <input type="text" id="c-name" required>
+      </div>
+      <div class="field">
+        <label for="c-email">Email address</label>
+        <input type="email" id="c-email" required>
+      </div>
+      <div class="field">
+        <label for="c-message">Message</label>
+        <textarea id="c-message" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+    </form>
+    <p style="font-size:.85rem; color:var(--text-low); margin-top:16px; text-align:center;">
+      Prefer email directly? Write to <a href="mailto:hello@brandshield.example" style="color:var(--coral);">hello@brandshield.example</a>
+    </p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 BrandShield. All rights reserved.</span>
+      <span><a href="terms.html" style="color:inherit;">Terms</a> · <a href="privacy.html" style="color:inherit;">Privacy</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('c-name').value.trim();
+    const email = document.getElementById('c-email').value.trim();
+    const message = document.getElementById('c-message').value.trim();
+    const subject = encodeURIComponent('New contact form message — ' + name);
+    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
+    window.location.href = 'mailto:hello@brandshield.example?subject=' + subject + '&body=' + body;
+  });
+</script>
+</body>
+</html>

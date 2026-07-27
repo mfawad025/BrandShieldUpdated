@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — BrandShield</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="logo">
+      <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M50 6 L88 20 V48 C88 72 72 88 50 96 C28 88 12 72 12 48 V20 Z" fill="#1F1830" stroke="#F5586B" stroke-width="4"/>
+        <circle cx="50" cy="48" r="20" fill="none" stroke="#2FD8B8" stroke-width="3"/>
+        <path d="M50 28 A20 20 0 0 1 70 48 L50 48 Z" fill="#2FD8B8" opacity="0.6"/>
+      </svg>
+      <span>Brand<em>Shield</em></span>
+    </a>
+    <nav class="nav-links">
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <a href="register.html" class="nav-cta">Get Protected</a>
+  </div>
+</header>
+
+<section style="padding:90px 0;">
+  <div class="wrap" style="max-width:420px;">
+    <div style="background:var(--ink-2); border:1px solid var(--line); border-radius:16px; padding:40px;">
+      <h2 style="text-align:center; margin-bottom:6px;">Welcome back</h2>
+      <p class="lede" style="text-align:center; margin:0 auto 28px; font-size:.95rem;">Log in to your BrandShield dashboard.</p>
+      <form id="login-form">
+        <div class="field">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      </form>
+      <p style="text-align:center; font-size:.85rem; color:var(--text-low); margin-top:18px;">
+        <a href="#" style="color:var(--coral);">Forgot password?</a>
+      </p>
+      <p style="text-align:center; font-size:.85rem; color:var(--text-low); margin-top:8px;">
+        Don't have an account? <a href="register.html" style="color:var(--coral);">Get protected</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 BrandShield. All rights reserved.</span>
+      <span><a href="terms.html" style="color:inherit;">Terms</a> · <a href="privacy.html" style="color:inherit;">Privacy</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  document.getElementById('login-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    // This is a static mockup — wire this up to your real auth backend.
+    window.location.href = 'dashboard.html';
+  });
+</script>
+</body>
+</html>
