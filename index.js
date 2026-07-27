@@ -24,12 +24,15 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const rateLimit = require('express-rate-limit');
 
 const db = require('./db');
 const { buildCheckoutUrl, verifyWebhookSignature } = require('./lemonsqueezy');
 const { startDailyScanCron } = require('./cron');
+const { searchGoogle } = require('./googleSearch');
 
 const app = express();
+app.set('trust proxy', 1); // needed so express-rate-limit sees real visitor IPs behind Render/Railway/etc.
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
 app.use(cors({ origin: ALLOWED_ORIGIN }));
@@ -76,6 +79,64 @@ app.post(
 app.use(express.json());
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+// ---------------- Free scan (public, no login) ----------------
+// Real search, real results — but this is a public, unauthenticated
+// endpoint, so it's rate-limited two ways:
+//   1. Per visitor: 3 free scans per IP per day (express-rate-limit)
+//   2. Site-wide: a hard daily cap so anonymous traffic can't eat the
+//      Google Custom Search quota your paying subscribers' daily scans
+//      depend on. Adjust FREE_SCAN_DAILY_SITE_CAP in .env as your quota allows.
+const freeScanPerIpLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Free scan limit reached for today. Sign up for continuous protection instead.' },
+});
+
+let siteWideScanCount = 0;
+let siteWideScanResetAt = startOfNextDay();
+function startOfNextDay() {
+  const d = new Date();
+  d.setHours(24, 0, 0, 0);
+  return d.getTime();
+}
+function siteWideCapReached() {
+  if (Date.now() >= siteWideScanResetAt) {
+    siteWideScanCount = 0;
+    siteWideScanResetAt = startOfNextDay();
+  }
+  const cap = Number(process.env.FREE_SCAN_DAILY_SITE_CAP || 25);
+  return siteWideScanCount >= cap;
+}
+
+app.post('/api/scan/free', freeScanPerIpLimiter, async (req, res) => {
+  try {
+    const alias = String(req.body?.alias || '').trim();
+    if (alias.length < 2) {
+      return res.status(400).json({ error: 'Enter a name or username to scan (at least 2 characters).' });
+    }
+    if (alias.length > 60) {
+      return res.status(400).json({ error: 'That name is too long — try just the stage name or username.' });
+    }
+    if (siteWideCapReached()) {
+      return res.status(429).json({ error: 'Free scans are fully booked for today — try again tomorrow, or sign up for continuous protection.' });
+    }
+
+    siteWideScanCount++;
+    const results = await searchGoogle(`"${alias}" leaked`);
+
+    res.json({
+      alias,
+      totalFound: results.length,
+      results: results.slice(0, 3), // show a taste; full list is a subscriber feature
+    });
+  } catch (err) {
+    console.error('Free scan error:', err.message);
+    res.status(502).json({ error: 'Scan is temporarily unavailable — please try again shortly.' });
+  }
+});
 
 // ---------------- Registration (creates account + starts Lemon Squeezy checkout) ----------------
 app.post('/api/register', (req, res) => {
